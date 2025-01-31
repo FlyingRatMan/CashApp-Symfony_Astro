@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="page">
+
+        {% if app.user %}
+            <div class="flex items-center justify-between m-8 pb-[10rem] text-xl">
+                <p>You are logged in as {{ app.user.name }}</p>
+                <button class="form_secondary-btn">
+                    <a href="{{ path('app_logout') }}">Logout</a>
+                </button>
+            </div>
+
+            <div class="flex flex-col items-center justify-center m-8 text-xl">
+                <p>Available balance: </p> {{ balance }}
+            </div>
+        {% endif %}
+
+        <div class="centered flex-col">
+
+            {{ form_start(form, { 'attr': { 'class': 'form' } }) }}
+
+            <div class="form_row">
+                {{ form_label(form.amount) }}
+                {{ form_widget(form.amount) }}
+                {{ form_errors(form.amount) }}
+            </div>
+
+            <button class="form_primary-btn" type="submit">
+                Send
+            </button>
+
+            <a href="{{ path('register_page') }}" class="text-green-900 hover:underline">Don't have an account
+                yet?</a>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+when@dev:
+    _errors:
+        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+        prefix: /_error
+
+    router:
+        path: 'http://127.0.0.1:8000'

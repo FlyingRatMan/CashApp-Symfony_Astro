@@ -1,0 +1,27 @@
+#change_password_form_plainPassword > div {
+    @apply flex flex-col justify-center;
+}
+
+.form {
+    @apply flex flex-col justify-center items-center w-full space-y-4;
+}
+
+.form_row {
+    @apply flex flex-col justify-center;
+}
+
+.form_input {
+    @apply border border-gray-300 rounded-lg px-4 py-2 text-green-800 font-normal focus:outline-none focus:ring-2 focus:ring-green-400;
+}
+
+.form_primary-btn {
+    @apply bg-green-400 text-white px-4 py-2 rounded-lg hover:bg-green-500;
+}
+
+.form_secondary-btn {
+    @apply border border-green-400 bg-white text-green-900 px-4 py-2 rounded-lg hover:bg-green-300;
+}
+
+.form_error {
+    @apply text-red-500;
+}
