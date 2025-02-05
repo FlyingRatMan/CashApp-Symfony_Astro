@@ -4,64 +4,57 @@ declare(strict_types=1);
 
 namespace App\Components\User\Communication;
 
-use App\Components\User\Communication\Form\Type\RegisterForm;
 use App\Components\User\Persistence\Mapper\UserMapper;
 use App\Components\User\Persistence\UserEntityManager;
 use App\Entity\User;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegisterController extends AbstractController
 {
     public function __construct(
-        private UserMapper $mapper,
-        private UserEntityManager $entityManager,
+        private UserMapper                  $mapper,
+        private UserEntityManager           $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
-    ) {
-    }
-
-    #[Route('/register', name: 'register_page', methods: ['GET'])]
-    public function renderPage(): Response
-    {
-        $form = $this->createForm(RegisterForm::class);
-
-        return $this->render('register/register.html.twig', ['form' => $form]);
-    }
+        private ValidatorInterface          $validator,
+    ) {}
 
     #[Route('/register', name: 'register_form', methods: ['POST'])]
-    public function register(Request $request): Response
+    public function register(Request $request): JsonResponse
     {
-        $form = $this->createForm(RegisterForm::class);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        $form->handleRequest($request);
+        $hashedPassword = $this->passwordHasher->hashPassword(new User(), $data['password']);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        $newUser = [
+            'id' => 1,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $hashedPassword,
+        ];
 
-            $hashedPassword = $this->passwordHasher->hashPassword(
-                new User(),
-                $data['password']
-            );
+        $userDTO = $this->mapper->createUserDTO($newUser);
 
-            $newUser = [
-                'id' => 1,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => $hashedPassword,
-            ];
-
-            $userDTO = $this->mapper->createUserDTO($newUser);
-
-            $this->entityManager->save($userDTO);
-
-            return $this->redirectToRoute('app_login');
+        $violations = $this->validator->validate($userDTO);
+        if (count($violations) > 0) {
+            return $this->json([
+                'status' => 401,
+                'message' => $violations[0]->getMessage(),
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->render('register/register.html.twig', [
-            'form' => $form,
-        ]);
+        $this->entityManager->save($userDTO);
+
+        return $this->json([
+            'status' => 200,
+            'message' => 'Symfony: User registered successfully.',
+            'user' => $newUser,
+        ], Response::HTTP_OK);
     }
 }

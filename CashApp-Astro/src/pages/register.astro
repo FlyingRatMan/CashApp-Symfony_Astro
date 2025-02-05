@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const metaTitle = 'Sign up!';
+---
+
+<Layout title={metaTitle}>
+    <div class="container">
+
+        <p id="form-error"></p>
+
+        <form action="/api/register" method="POST">
+            <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" class="form_input" required/>
+            </div>
+
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form_input" required/>
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form_input" required/>
+            </div>
+
+            <button type="submit" class="form_primary-btn">Sign in!</button>
+
+            <a href="/login" class="text-green-900 hover:underline">Have an account already? Login
+                here.</a>
+        </form>
+    </div>
+</Layout>
+
+<script>
+    const errorMessageElement = document.getElementById("form-error")!;
+
+    document.querySelector('form')?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorMessageElement.innerText = "";
+        const formElement = e.target as HTMLFormElement;
+
+        const formData = new FormData(formElement);
+        const data = Object.fromEntries(formData.entries());
+
+        const response = await fetch(
+            formElement.action,
+            {
+                method: formElement.method,
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data)
+            } as RequestInit
+        );
+
+        if (response.ok) {
+            console.log('200')
+            // window.location.assign(response.url);
+        } else {
+            errorMessageElement.innerText = (await response.json()).error;
+            errorMessageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+</script>
