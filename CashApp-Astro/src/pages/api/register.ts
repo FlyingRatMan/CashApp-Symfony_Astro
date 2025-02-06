@@ -9,8 +9,8 @@ export const POST: APIRoute = async ({request, redirect}) => {
         email: formData.email,
         password: formData.password,
     };
-    
-    const response = await fetch('http://localhost:8000/register', {
+
+    const response = await fetch('http://localhost:8000/api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,10 +27,11 @@ export const POST: APIRoute = async ({request, redirect}) => {
         }), {status: 401});
     }
 
-    return new Response(JSON.stringify({
+    return redirect("/login?registered=true", 301);
+    /*return new Response(JSON.stringify({
         status: 'success',
         message: 'Astro: Successfully registered',
-    }), {status: 200});
+    }), {status: 200});*/
 }
 
 // catch symfony response here, pass it to astro page

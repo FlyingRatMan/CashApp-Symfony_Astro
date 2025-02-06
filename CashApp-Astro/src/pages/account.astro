@@ -1,0 +1,16 @@
+---
+const token = localStorage.getItem("authToken");
+
+if (!token) {
+    window.location.href = "/login";
+}
+---
+<h1>Welcome to the Dashboard</h1>
+<a href="#" onclick="logout()">Logout</a>
+
+<script>
+    function logout() {
+        localStorage.removeItem("authToken");
+        window.location.href = "/login";
+    }
+</script>

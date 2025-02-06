@@ -25,7 +25,7 @@ class RegisterController extends AbstractController
         private ValidatorInterface          $validator,
     ) {}
 
-    #[Route('/register', name: 'register_form', methods: ['POST'])]
+    #[Route('/api/register', name: 'register_form', methods: ['POST'])]
     public function register(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -48,13 +48,12 @@ class RegisterController extends AbstractController
                 'message' => $violations[0]->getMessage(),
             ], Response::HTTP_UNAUTHORIZED);
         }
-
+// todo validation of password is not working
         $this->entityManager->save($userDTO);
 
         return $this->json([
             'status' => 200,
             'message' => 'Symfony: User registered successfully.',
-            'user' => $newUser,
         ], Response::HTTP_OK);
     }
 }
