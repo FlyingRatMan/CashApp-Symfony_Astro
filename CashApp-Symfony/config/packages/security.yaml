@@ -13,25 +13,15 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
     main:
+      custom_authenticators:
+        - App\Security\TokenAuthenticator
+
       json_login:
         check_path: api_login
 
-      #      pattern: ^/
-      #      lazy: true
-      #      provider: app_user_provider
-      #      form_login:
-      #        login_path: app_login
-      #        check_path: app_login
-      #        enable_csrf: true
-      #        default_target_path: account_page
-      #      logout:
-      #        path: app_logout
-      #        target: app_login
-
-      #            remember_me:
-      #                secret: '%kernel.secret%'
-      #                lifetime: 604800
+      lazy: true
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall

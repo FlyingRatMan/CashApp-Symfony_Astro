@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 
 const metaTitle = 'Login!';
 
-
 const isRegistered =  Astro.url.searchParams.get('registered');
 ---
 
@@ -51,7 +50,6 @@ const isRegistered =  Astro.url.searchParams.get('registered');
             formElement.action,
             {
                 method: formElement.method,
-                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(data)
             } as RequestInit
         );

@@ -28,10 +28,4 @@ export const POST: APIRoute = async ({request, redirect}) => {
     }
 
     return redirect("/login?registered=true", 301);
-    /*return new Response(JSON.stringify({
-        status: 'success',
-        message: 'Astro: Successfully registered',
-    }), {status: 200});*/
 }
-
-// catch symfony response here, pass it to astro page

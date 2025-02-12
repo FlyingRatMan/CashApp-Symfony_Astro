@@ -30,16 +30,12 @@ class RegisterController extends AbstractController
     {
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        $hashedPassword = $this->passwordHasher->hashPassword(new User(), $data['password']);
-
-        $newUser = [
+        $userDTO = $this->mapper->createUserDTO([
             'id' => 1,
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $hashedPassword,
-        ];
-
-        $userDTO = $this->mapper->createUserDTO($newUser);
+            'password' => $data['password'],
+        ]);
 
         $violations = $this->validator->validate($userDTO);
         if (count($violations) > 0) {
@@ -48,7 +44,16 @@ class RegisterController extends AbstractController
                 'message' => $violations[0]->getMessage(),
             ], Response::HTTP_UNAUTHORIZED);
         }
-// todo validation of password is not working
+
+        $hashedPassword = $this->passwordHasher->hashPassword(new User(), $data['password']);
+
+        $userDTO = $this->mapper->createUserDTO([
+            'id' => 1,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $hashedPassword,
+        ]);
+
         $this->entityManager->save($userDTO);
 
         return $this->json([

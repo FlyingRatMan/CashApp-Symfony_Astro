@@ -28,6 +28,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column]
+    private ?string $token = null;
+
+    #[ORM\Column]
+    private ?\DateTimeInterface $tokenExpiresAt = null;
+
     /**
      * @var Collection<int, Account>
      */
