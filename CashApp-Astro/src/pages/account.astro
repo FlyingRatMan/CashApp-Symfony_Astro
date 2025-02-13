@@ -5,17 +5,28 @@ if (!user) {
     return Astro.redirect('/login');
 }
 
-
 ---
 <h1>Welcome, { user }</h1>
 
-<a href="/api/logout" id="logoutBtn" type="submit" class="form_primary-btn">Log out</a>
+<p id="form-error"></p>
+
+
+
+<a id="logoutBtn" type="submit" class="form_primary-btn">Log out</a>
 
 <script>
+    const errorMessageElement = document.getElementById("form-error")!;
+
     document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-        const response = await fetch('/login', {
-            method: 'GET',
+        errorMessageElement.innerText = "";
+
+        const response = await fetch('/api/logout', {
+            method: 'POST',
         });
+
+        if (!response.ok) {
+            errorMessageElement.innerText = (await response.json()).message;
+        }
 
         window.location.assign(response.url);
     })

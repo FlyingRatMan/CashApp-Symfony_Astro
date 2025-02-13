@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Components\Security;
 
 use App\Components\User\Persistence\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
