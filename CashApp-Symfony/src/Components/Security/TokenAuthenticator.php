@@ -30,10 +30,10 @@ class TokenAuthenticator extends AbstractAuthenticator
     {
         $token = $request->headers->get('token');
         if (null === $token) {
-            throw new CustomUserMessageAuthenticationException('No API token provided');
+            throw new CustomUserMessageAuthenticationException('No API token provided.');
         }
 
-        $userIdentifier = $this->userRepository->getUserByToken($token);
+        $userIdentifier = $this->userRepository->getUserIdentifierByToken($token);
 
         return new SelfValidatingPassport(new UserBadge($userIdentifier));
     }

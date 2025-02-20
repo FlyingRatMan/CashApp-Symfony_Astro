@@ -1,21 +1,86 @@
 ---
+import Layout from '../layouts/Layout.astro';
+
+const metaTitle: string = 'My Account';
+
 const user = await Astro.session?.get('user');
+const token = await Astro.session?.get('token');
 
 if (!user) {
     return Astro.redirect('/login');
 }
 
+const response: Response = await fetch('http://localhost:4321/api/account',
+    {
+        method: 'GET',
+        headers: {
+            token: token
+        }
+    } as RequestInit
+);
+
+let balance = (await response.json()).balance;
 ---
-<h1>Welcome, { user }</h1>
 
-<p id="form-error"></p>
+<Layout title={metaTitle}>
 
+    <div>
+        <h1>Welcome, {user}</h1>
 
+        <a id="logoutBtn" type="submit" class="form_primary-btn">Log out</a>
+    </div>
 
-<a id="logoutBtn" type="submit" class="form_primary-btn">Log out</a>
+    <div>
+        <p>Available balance: <span id="balance">{balance}</span></p>
+    </div>
+
+    <div>
+        <p id="form-error"></p>
+
+        <form class="form" action="/api/account" method="POST">
+
+            <div class="form_row">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" required/>
+            </div>
+
+            <button class="form_primary-btn" type="submit">
+                Send
+            </button>
+        </form>
+    </div>
+
+</Layout>
 
 <script>
-    const errorMessageElement = document.getElementById("form-error")!;
+    const errorMessageElement: HTMLElement = document.getElementById("form-error")!;
+    const balanceElement: HTMLElement = document.getElementById("balance")!;
+    const inputAmountElement: HTMLInputElement = document.getElementById("amount")! as HTMLInputElement;
+
+    document.querySelector('form')?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorMessageElement.innerText = "";
+        const formElement: HTMLFormElement = e.target as HTMLFormElement;
+
+        const formData = new FormData(formElement);
+        const data = Object.fromEntries(formData.entries());
+
+        const response = await fetch(
+            formElement.action,
+            {
+                method: formElement.method,
+                body: JSON.stringify(data)
+            } as RequestInit
+        );
+
+        const res = await response.json();
+        errorMessageElement.innerText = res.message;
+        balanceElement.innerText = res.balance;
+
+        if (response.ok) {
+            inputAmountElement.value = '';
+        }
+    });
 
     document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
         errorMessageElement.innerText = "";
@@ -24,10 +89,6 @@ if (!user) {
             method: 'POST',
         });
 
-        if (!response.ok) {
-            errorMessageElement.innerText = (await response.json()).message;
-        }
-
-        window.location.assign(response.url);
-    })
+        errorMessageElement.innerText = (await response.json()).message;
+    });
 </script>

@@ -1,7 +1,6 @@
-import type {APIRoute} from "astro";
+import type { APIRoute } from 'astro';
 
-
-export const POST: APIRoute = async ({request, redirect}) => {
+export const POST: APIRoute = async ({ request, redirect }) => {
     const formData = await request.json();
 
     const data = {
@@ -21,11 +20,14 @@ export const POST: APIRoute = async ({request, redirect}) => {
     const json = await response.json();
 
     if (response.status === 401) {
-        return new Response(JSON.stringify({
-            status: 'error',
-            message: json.message || 'Astro: Something went wrong',
-        }), {status: 401});
+        return new Response(
+            JSON.stringify({
+                status: 'error',
+                message: json.message || 'Astro: Something went wrong',
+            }),
+            { status: 401 },
+        );
     }
 
-    return redirect("/login?registered=true", 301);
-}
+    return redirect('/login?registered=true', 301);
+};

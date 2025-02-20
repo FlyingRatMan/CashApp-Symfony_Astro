@@ -26,7 +26,7 @@ class HourlyLimitValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, HourlyLimit::class);
         }
 
-        $amount = (float) $value;
+        $amount = (double) $value;
         $user = $this->security->getUser();
 
         if (!$user instanceof UserInterface) {

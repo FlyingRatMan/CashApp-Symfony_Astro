@@ -17,15 +17,11 @@ class AccountForm extends AbstractType
         $builder
             ->add('amount', FormType\MoneyType::class, [
                 'label' => 'Amount',
-                'currency' => false,
                 'attr' => [
                     'required' => true,
-                    'class' => 'form_input',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Positive(),
-                    new Assert\Type('numeric'),
+                    new Assert\NotBlank(null, 'Amount should be VALID'),
                     new DailyLimit(),
                     new HourlyLimit(),
                 ],
@@ -35,6 +31,9 @@ class AccountForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'data_class' => null,
+            'csrf_protection' => false,
+        ]);
     }
 }

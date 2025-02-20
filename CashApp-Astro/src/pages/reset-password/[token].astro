@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const metaTitle = 'Reset password';
+
+const token = Astro.params.token;
+---
+
+<Layout title={metaTitle}>
+
+    <div class="centered">
+
+        <p id="form-error"></p>
+
+        <form action={`/api/reset-password/${token}`} method="POST">
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form_input" required/>
+            </div>
+
+            <div>
+                <label for="repeatPassword">Repeat password</label>
+                <input type="password" id="repeatPassword" name="repeatPassword" class="form_input" required/>
+            </div>
+
+            <button class="form_primary-btn">Reset password</button>
+        </form>
+    </div>
+</Layout>
+
+<script>
+    const errorMessageElement = document.getElementById("form-error")!;
+
+    document.querySelector('form')?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        errorMessageElement.innerText = "";
+        const formElement = e.target as HTMLFormElement;
+
+        const formData = Object.fromEntries((new FormData(formElement)).entries());
+        const token = formElement.action.split("reset-password/")[1];
+        const data = {
+            password: formData.password,
+            repeatPassword: formData.repeatPassword,
+            token: token,
+        };
+
+        const response = await fetch(
+            '/api/reset-password/token',
+            {
+                method: formElement.method,
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data)
+            } as RequestInit
+        );
+
+        if (response.redirected) {
+            window.location.assign(response.url);
+        }
+
+        errorMessageElement.innerText = (await response.json()).message;
+    });
+
+</script>

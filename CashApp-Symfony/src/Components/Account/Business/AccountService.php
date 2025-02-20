@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Components\Account\Business;
 
 use App\Components\Account\Persistence\AccountRepository;
+use Symfony\Component\Form\FormInterface;
 
 class AccountService
 {
@@ -23,5 +24,14 @@ class AccountService
         }
 
         return $balance;
+    }
+
+    public function getFormErrors(FormInterface $form): array
+    {
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $errors[$error->getOrigin()->getName()][] = $error->getMessage();
+        }
+        return $errors;
     }
 }

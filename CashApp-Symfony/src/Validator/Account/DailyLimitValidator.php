@@ -26,7 +26,7 @@ class DailyLimitValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, DailyLimit::class);
         }
 
-        $amount = (float) $value;
+        $amount = (double) $value;
         $user = $this->security->getUser();
 
         if (!$user instanceof UserInterface) {

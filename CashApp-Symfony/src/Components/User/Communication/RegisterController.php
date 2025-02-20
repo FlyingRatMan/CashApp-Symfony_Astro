@@ -7,7 +7,6 @@ namespace App\Components\User\Communication;
 use App\Components\User\Persistence\Mapper\UserMapper;
 use App\Components\User\Persistence\UserEntityManager;
 use App\Entity\User;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
