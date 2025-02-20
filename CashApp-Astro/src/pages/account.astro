@@ -27,7 +27,7 @@ let balance = (await response.json()).balance;
     <div>
         <h1>Welcome, {user}</h1>
 
-        <a id="logoutBtn" type="submit" class="form_primary-btn">Log out</a>
+        <button><a id="logoutBtn" type="submit" class="form_primary-btn">Log out</a></button>
     </div>
 
     <div>
@@ -57,7 +57,7 @@ let balance = (await response.json()).balance;
     const balanceElement: HTMLElement = document.getElementById("balance")!;
     const inputAmountElement: HTMLInputElement = document.getElementById("amount")! as HTMLInputElement;
 
-    document.querySelector('form')?.addEventListener("submit", async (e) => {
+    document.querySelector('form')?.addEventListener("submit", async (e: SubmitEvent): Promise<void> => {
         e.preventDefault();
         errorMessageElement.innerText = "";
         const formElement: HTMLFormElement = e.target as HTMLFormElement;
@@ -65,7 +65,7 @@ let balance = (await response.json()).balance;
         const formData = new FormData(formElement);
         const data = Object.fromEntries(formData.entries());
 
-        const response = await fetch(
+        const response: Response = await fetch(
             formElement.action,
             {
                 method: formElement.method,
@@ -75,19 +75,23 @@ let balance = (await response.json()).balance;
 
         const res = await response.json();
         errorMessageElement.innerText = res.message;
-        balanceElement.innerText = res.balance;
 
         if (response.ok) {
+            balanceElement.innerText = res.balance;
             inputAmountElement.value = '';
         }
     });
 
-    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+    document.getElementById('logoutBtn')?.addEventListener('click', async (e: MouseEvent): Promise<void> => {
         errorMessageElement.innerText = "";
 
-        const response = await fetch('/api/logout', {
+        const response: Response = await fetch('/api/logout', {
             method: 'POST',
         });
+
+        if (response.ok) {
+            window.location.assign('/login');
+        }
 
         errorMessageElement.innerText = (await response.json()).message;
     });

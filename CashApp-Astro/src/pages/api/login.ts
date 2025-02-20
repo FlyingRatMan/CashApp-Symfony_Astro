@@ -1,14 +1,23 @@
-import type { APIRoute } from 'astro';
+import type { APIContext, APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request, session, redirect }) => {
-    const formData = await request.json();
+interface LoginFormData {
+    email: string;
+    password: string;
+}
+
+export const POST: APIRoute = async ({
+    request,
+    session,
+    redirect,
+}: APIContext): Promise<Response> => {
+    const formData: LoginFormData = await request.json();
 
     const data = {
         username: formData.email,
         password: formData.password,
     };
 
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response: Response = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -1,29 +1,33 @@
-import type { APIRoute } from 'astro';
+import type { APIContext, APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request, redirect }) => {
-    const formData = await request.json();
+interface RegisterFormData {
+    name: string;
+    email: string;
+    password: string;
+}
 
-    const data = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-    };
+export const POST: APIRoute = async ({
+    request,
+    redirect,
+}: APIContext): Promise<Response> => {
+    const formData: RegisterFormData = await request.json();
 
-    const response = await fetch('http://localhost:8000/api/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+    const response: Response = await fetch(
+        'http://localhost:8000/api/register',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
         },
-        body: JSON.stringify(data),
-    });
-
-    const json = await response.json();
+    );
 
     if (response.status === 401) {
         return new Response(
             JSON.stringify({
                 status: 'error',
-                message: json.message || 'Astro: Something went wrong',
+                message: (await response.json()).message,
             }),
             { status: 401 },
         );

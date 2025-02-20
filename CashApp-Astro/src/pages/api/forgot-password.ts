@@ -1,15 +1,24 @@
-import type { APIRoute } from 'astro';
+import type { APIContext, APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request }) => {
-    const formData = await request.json();
+interface ForgotPasswordFromData {
+    email: string;
+}
 
-    const response = await fetch('http://localhost:8000/api/reset-password', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+export const POST: APIRoute = async ({
+    request,
+}: APIContext): Promise<Response> => {
+    const formData: ForgotPasswordFromData = await request.json();
+
+    const response: Response = await fetch(
+        'http://localhost:8000/api/reset-password',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-    });
+    );
 
     if (!response.ok) {
         return new Response(

@@ -1,7 +1,10 @@
-import type { APIRoute } from 'astro';
+import type { APIContext, APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ redirect, session }) => {
-    const response = await fetch('http://localhost:8000/api/logout', {
+export const POST: APIRoute = async ({
+    redirect,
+    session,
+}: APIContext): Promise<Response> => {
+    const response: Response = await fetch('http://localhost:8000/api/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

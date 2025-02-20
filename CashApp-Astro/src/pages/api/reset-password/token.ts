@@ -1,11 +1,18 @@
-import type { APIRoute } from 'astro';
+import type { APIContext, APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request, redirect }) => {
-    const formData = await request.json();
+interface TokenFormData {
+    token: string;
+}
 
-    const token = formData['token'];
+export const POST: APIRoute = async ({
+    request,
+    redirect,
+}: APIContext): Promise<Response> => {
+    const formData: TokenFormData = await request.json();
 
-    const response = await fetch(
+    const token: string = formData['token'];
+
+    const response: Response = await fetch(
         `http://localhost:8000/api/reset-password/${token}`,
         {
             method: 'POST',

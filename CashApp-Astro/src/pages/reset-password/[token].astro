@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const metaTitle = 'Reset password';
+const metaTitle: string = 'Reset password';
 
-const token = Astro.params.token;
+const token: string = Astro.params.token ?? 'invalid_token';
 ---
 
 <Layout title={metaTitle}>
@@ -29,23 +29,23 @@ const token = Astro.params.token;
 </Layout>
 
 <script>
-    const errorMessageElement = document.getElementById("form-error")!;
+    const errorMessageElement: HTMLElement = document.getElementById("form-error")!;
 
-    document.querySelector('form')?.addEventListener("submit", async (e) => {
+    document.querySelector('form')?.addEventListener("submit", async (e: SubmitEvent): Promise<void> => {
         e.preventDefault();
 
         errorMessageElement.innerText = "";
-        const formElement = e.target as HTMLFormElement;
+        const formElement: HTMLFormElement = e.target as HTMLFormElement;
 
         const formData = Object.fromEntries((new FormData(formElement)).entries());
-        const token = formElement.action.split("reset-password/")[1];
+        const token: string = formElement.action.split("reset-password/")[1];
         const data = {
             password: formData.password,
             repeatPassword: formData.repeatPassword,
             token: token,
         };
 
-        const response = await fetch(
+        const response: Response = await fetch(
             '/api/reset-password/token',
             {
                 method: formElement.method,

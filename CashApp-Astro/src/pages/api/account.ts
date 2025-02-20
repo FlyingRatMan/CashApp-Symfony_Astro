@@ -1,10 +1,14 @@
 import type { APIContext, APIRoute } from 'astro';
 
+interface AccountFormData {
+    amount: string;
+}
+
 export const POST: APIRoute = async ({
     request,
     session,
 }: APIContext): Promise<Response> => {
-    const formData = await request.json();
+    const formData: AccountFormData = await request.json();
 
     const userToken: string | undefined = await session?.get('token');
 
