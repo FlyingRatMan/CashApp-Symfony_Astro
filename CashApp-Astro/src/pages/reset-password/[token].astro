@@ -10,18 +10,18 @@ const token: string = Astro.params.token ?? 'invalid_token';
 
     <div class="centered">
 
-        <p id="form-error"></p>
-
-        <form action={`/api/reset-password/${token}`} method="POST">
-            <div>
+        <form action={`/api/reset-password/${token}`} method="POST" class="form">
+            <div class="form_row">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" class="form_input" required/>
             </div>
 
-            <div>
+            <div class="form_row">
                 <label for="repeatPassword">Repeat password</label>
                 <input type="password" id="repeatPassword" name="repeatPassword" class="form_input" required/>
             </div>
+
+            <p id="form-error" class="from_error"></p>
 
             <button class="form_primary-btn">Reset password</button>
         </form>

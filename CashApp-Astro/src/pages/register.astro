@@ -7,28 +7,27 @@ const metaTitle: string = 'Sign up!';
 <Layout title={metaTitle}>
     <div class="centered">
 
-        <p id="form-error"></p>
-
-        <form action="/api/register" method="POST">
-            <div>
+        <form action="/api/register" method="POST" class="form">
+            <div class="form_row">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" class="form_input" required/>
             </div>
 
-            <div>
+            <div class="form_row">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" class="form_input" required/>
             </div>
 
-            <div>
+            <div class="form_row">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" class="form_input" required/>
             </div>
 
+            <p id="form-error" class="form_error"></p>
+
             <button type="submit" class="form_primary-btn">Sign in!</button>
 
-            <a href="/login" class="text-green-900 hover:underline">Have an account already? Login
-                here.</a>
+            <a href="/login" class="text-green-900 hover:underline">Have an account already? Click here.</a>
         </form>
     </div>
 </Layout>

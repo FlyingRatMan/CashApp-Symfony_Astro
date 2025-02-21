@@ -29,7 +29,7 @@ export const POST: APIRoute = async ({
         return new Response(
             JSON.stringify({
                 status: 'error',
-                message: res.errors.amount[0],
+                error: res.errors.amount[0],
             }),
             { status: 400 },
         );

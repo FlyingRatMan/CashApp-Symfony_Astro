@@ -20,33 +20,34 @@ const response: Response = await fetch('http://localhost:4321/api/account',
 );
 
 let balance = (await response.json()).balance;
+
 ---
 
 <Layout title={metaTitle}>
 
-    <div>
+    <div class="flex items-center justify-between m-8 pb-12 text-xl">
         <h1>Welcome, {user}</h1>
 
         <button><a id="logoutBtn" type="submit" class="form_primary-btn">Log out</a></button>
     </div>
 
-    <div>
+    <div class="centered">
         <p>Available balance: <span id="balance">{balance}</span></p>
     </div>
 
-    <div>
-        <p id="form-error"></p>
+    <div class="centered">
 
         <form class="form" action="/api/account" method="POST">
 
             <div class="form_row">
                 <label for="amount">Amount</label>
-                <input type="number" id="amount" name="amount" required/>
+                <input type="number" id="amount" name="amount" class="form_input" required/>
             </div>
 
-            <button class="form_primary-btn" type="submit">
-                Send
-            </button>
+            <p id="form-error" class="form_error"></p>
+            <p id="form-info" class="form_info"></p>
+
+            <button class="form_primary-btn" type="submit">Send</button>
         </form>
     </div>
 
@@ -54,12 +55,14 @@ let balance = (await response.json()).balance;
 
 <script>
     const errorMessageElement: HTMLElement = document.getElementById("form-error")!;
+    const infoMessageElement: HTMLElement = document.getElementById("form-info")!;
     const balanceElement: HTMLElement = document.getElementById("balance")!;
     const inputAmountElement: HTMLInputElement = document.getElementById("amount")! as HTMLInputElement;
 
     document.querySelector('form')?.addEventListener("submit", async (e: SubmitEvent): Promise<void> => {
         e.preventDefault();
         errorMessageElement.innerText = "";
+        infoMessageElement.innerText = "";
         const formElement: HTMLFormElement = e.target as HTMLFormElement;
 
         const formData = new FormData(formElement);
@@ -74,11 +77,15 @@ let balance = (await response.json()).balance;
         );
 
         const res = await response.json();
-        errorMessageElement.innerText = res.message;
 
         if (response.ok) {
+            infoMessageElement.innerText = res.message;
             balanceElement.innerText = res.balance;
             inputAmountElement.value = '';
+        }
+
+        if (!response.ok) {
+            errorMessageElement.innerText = res.error;
         }
     });
 
